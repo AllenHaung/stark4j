@@ -11,5 +11,15 @@
 
     <artifactId>stark4j-mybatis</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <artifactId>stark4j-core</artifactId>
+            <groupId>com.github.stark4j</groupId>
+        </dependency>
+    </dependencies>
 
 </project>

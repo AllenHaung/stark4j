@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
 import com.github.stark4j.core.utils.J8DateUtils;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +18,7 @@ import java.time.LocalTime;
 /**
  * @author Allen Created 2020/4/1
  */
+@Configuration
 public class JacksonConfig {
     public LocalDateTimeSerializer localDateTimeSerializer() {
         return new LocalDateTimeSerializer(J8DateUtils.GLOBAL_DATE_TIME_FORMATTER);

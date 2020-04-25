@@ -91,7 +91,6 @@
                 <scope>import</scope>
             </dependency>
 
-
             <dependency>
                 <artifactId>stark4j-beans</artifactId>
                 <groupId>com.github.stark4j</groupId>

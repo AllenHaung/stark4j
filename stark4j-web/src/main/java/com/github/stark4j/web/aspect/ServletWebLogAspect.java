@@ -1,5 +1,6 @@
 package com.github.stark4j.web.aspect;
 
+import com.github.stark4j.core.exception.Stark4jException;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ValidationException;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class ServletWebLogAspect {
     /**
      * 用于保存每次请求的时间戳
      */
-    private ThreadLocal<Long> startTime = new ThreadLocal<>();
+    private final ThreadLocal<Long> startTime = new ThreadLocal<>();
 
     @Pointcut("@within(org.springframework.web.bind.annotation.RestController)")
     public void webLog() {
@@ -47,13 +49,14 @@ public class ServletWebLogAspect {
 
     @AfterThrowing(throwing = "ex", pointcut = "webLog()")
     public void exception(Throwable ex) {
-//        if (ex instanceof Stark4jException) {
-//            log.warn("Web层捕捉到业务异常,code: {},message: {}", ((Stark4jException) ex).getCode(), ex.getMessage());
-//        } else if (ex instanceof ValidationException) {
-//            log.warn("Web层捕捉到参数校验失败异常:{}", ex.getMessage());
-//        } else {
-//            log.error("Web层捕捉到异常", ex);
-//        }
+        if (ex instanceof Stark4jException) {
+            log.warn("Web层捕捉到业务异常,code: {},message: {}", ((Stark4jException) ex).getCode(), ex.getMessage());
+        } else if (ex instanceof ValidationException) {
+            log.warn("Web层捕捉到参数校验失败异常:{}", ex.getMessage());
+        } else {
+            log.error("Web层捕捉到异常", ex);
+        }
+        startTime.remove();
     }
 
     private void doBeforeSomething(JoinPoint joinPoint) {
@@ -73,7 +76,6 @@ public class ServletWebLogAspect {
             log.info("--------------------------------------------------------");
             log.warn("AOP失效，ServletRequestAttributes是空的.");
         }
-
     }
 
     private Map<String, Object> getHead(HttpServletRequest request) {
@@ -90,6 +92,7 @@ public class ServletWebLogAspect {
     private void doAfterSomeThing() {
         long time = System.currentTimeMillis() - startTime.get();
         log.info("<== 接口耗时: {}ms.", time);
+        startTime.remove();
     }
 
 }

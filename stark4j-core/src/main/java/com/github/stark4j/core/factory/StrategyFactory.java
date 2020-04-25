@@ -14,7 +14,7 @@ public class StrategyFactory {
     /**
      * 存储策略对象的容器
      */
-    private static Map<Class<?>, Map<String, Object>> beans = new HashMap<>();
+    private static final Map<Class<?>, Map<String, Object>> BEANS = new HashMap<>();
 
     /**
      * 新增一个策略
@@ -24,7 +24,7 @@ public class StrategyFactory {
      * @param bean         策略实例
      */
     public static void addStrategy(Class<?> strategyType, String type, Object bean) {
-        beans.computeIfAbsent(strategyType, k -> new HashMap<>())
+        BEANS.computeIfAbsent(strategyType, k -> new HashMap<>())
                 .put(type, bean);
     }
 
@@ -37,7 +37,7 @@ public class StrategyFactory {
      */
     @SuppressWarnings("unchecked")
     public static <T> Optional<T> getStrategy(Class<T> strategyType, String type) {
-        return Optional.ofNullable(beans.get(strategyType))
+        return Optional.ofNullable(BEANS.get(strategyType))
                 .map(var -> (T) var.get(type));
     }
 
@@ -49,7 +49,7 @@ public class StrategyFactory {
      * @return 返回是否存在
      */
     public static boolean exists(Class<?> strategyType, String name) {
-        return Optional.ofNullable(beans.get(strategyType))
+        return Optional.ofNullable(BEANS.get(strategyType))
                 .map(var -> var.get(name))
                 .isPresent();
     }
