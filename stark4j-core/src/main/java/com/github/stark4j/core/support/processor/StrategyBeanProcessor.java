@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 public class StrategyBeanProcessor implements BeanPostProcessor {
 
     @Override
-    public Object postProcessAfterInitialization(@NonNull Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(@NonNull Object bean,@NonNull String beanName) throws BeansException {
         Class<?> clazz = AopUtils.isAopProxy(bean) ? AopUtils.getTargetClass(bean) : bean.getClass();
         MarkStrategy antSpaceStrategy = AnnotationUtils.findAnnotation(clazz, MarkStrategy.class);
         if (antSpaceStrategy != null) {
